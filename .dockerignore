@@ -1,0 +1,7 @@
+**/__pycache__/
+**/.pytest_cache/
+**/.DS_Store
+.vscode
+.git
+.DS_Store
+.env

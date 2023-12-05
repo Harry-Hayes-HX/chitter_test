@@ -1,0 +1,9 @@
+**/__pycache__/
+ChitterApp/lib/__pycache__/
+tests/__pycache__/
+**/.pytest_cache/
+.env
+.DS_Store
+**/.DS_Store
+redis.conf
+seed_prod_database.py

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_user.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon_io/favicon.ico') }}">
+</head>
+<body>
+    {% if stage == 1 %}
+        <h1>Confirm Profile Deletion</h1>
+        <form action="/delete_user" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <p>You have entered a dangerous area. Deleting your profile is an unrecoverable operation. Are you sure you want to continue?</p>
+            <input class="yes-button" type="submit" name="delete" value="Continue">
+            <input type="hidden" name="stage" value=1>
+            <input type="hidden" name="stage_1_auth" value={{auths[0]}}>
+            <a href="user/{{user.user_name}}" class="no-button">Cancel</a>
+        </form>
+    {% elif stage == 2 %}
+        <h1>Enter Password for Confirmation</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="/delete_user" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <label for="password">Enter your password:</label>
+            <input type="password" name="password" id="password" autocomplete="off">
+            <input class="yes-button" type="submit" name="delete" value="Continue">
+            <input type="hidden" name="stage" value=2>
+            <input type="hidden" name="stage_1_auth" value={{auths[0]}}>
+            <input type="hidden" name="stage_2_auth" value={{auths[1]}}>
+            <a href="user/{{user.user_name}}" class="no-button">Cancel</a>
+        </form>
+    {% elif stage == 3 %}
+        <h1>Enter Year of Birth for Verification</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="/delete_user" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <label for="birth_year">Enter your year of birth:</label>
+            <input type="text" name="birth_year" id="birth_year" autocomplete="off">
+            <input class="yes-button" type="submit" name="delete" value="Continue">
+            <input type="hidden" name="stage" value=3>
+            <input type="hidden" name="stage_1_auth" value={{auths[0]}}>
+            <input type="hidden" name="stage_2_auth" value={{auths[1]}}>
+            <input type="hidden" name="stage_3_auth" value={{auths[2]}}>
+            <a href="user/{{user.user_name}}" class="no-button">Cancel</a>
+        </form>
+    {% elif stage == 4 %}
+        <h1>Final Confirmation</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="/delete_user" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <p class="instruction">Type the following to confirm:</p>
+            <label class="words" for="user_name">I, {{user.user_name}}, confirm that I want to delete my profile.</label>
+            <input type="text" name="user_name_confirm" id="user_name" autocomplete="off">
+            <input class="yes-button" type="submit" name="delete" value="Commit to it!">
+            <input type="hidden" name="stage" value=4>
+            <input type="hidden" name="stage_1_auth" value={{auths[0]}}>
+            <input type="hidden" name="stage_2_auth" value={{auths[1]}}>
+            <input type="hidden" name="stage_3_auth" value={{auths[2]}}>
+            <input type="hidden" name="stage_4_auth" value={{auths[3]}}>
+            <a href="user/{{user.user_name}}" class="no-button">Cancel!</a>
+        </form>
+    {% elif stage == 5 %}
+        <h1>Account Deleted</h1>
+        <div class="display-box">
+            <p>Your account and all your data associated with it was successfully deleted.</p>
+            <h2>Goodbye!</h2>
+            <a href="/" class="homepage-button">Chitter Homepage</a>
+        </div>
+    {% elif stage == 10 %}
+        <h1>Time Exceeded</h1>
+        <div class="display-box">
+            <p>You took too long. Please go back and start again.</p>
+            <a href="user/{{user.user_name}}" class="user-page-button">Back to Profile</a>
+        </div>
+    {% elif stage == 11 %}
+        <h1>Too Many Attempts</h1>
+        <div class="display-box">
+            <p>The information you provided about yourself was incorrect 5 times in a row. Try again in 1 hour.</p>
+            <a href="user/{{user.user_name}}" class="user-page-button">Back to Profile</a>
+        </div>
+    {% else %}
+        <div class="display-box">
+            <h2>An error occured! You have been logged out for security reasons.</h2>
+            <p>Please try again.</p>
+            <a href="/" class="homepage-button">Chitter Homepage</a>
+        </div>
+    {% endif %}
+</body>
+</html>
